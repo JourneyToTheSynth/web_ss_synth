@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<div id="result">pending</div>
+<script>
+(async () => {
+  const el = document.getElementById('result');
+  try {
+    const ctx = new OfflineAudioContext(2, 48000, 48000); // 1 s @ 48 kHz
+    const [module] = await Promise.all([
+      WebAssembly.compileStreaming(fetch('web_ss_synth.wasm')),
+      ctx.audioWorklet.addModule('ss-synth-processor.js'),
+    ]);
+    const node = new AudioWorkletNode(ctx, 'ss-synth', {
+      numberOfInputs: 0,
+      numberOfOutputs: 1,
+      outputChannelCount: [2],
+      processorOptions: { module },
+    });
+    let procError = '';
+    node.onprocessorerror = () => { procError = ' PROC_ERROR'; };
+    node.connect(ctx.destination);
+    node.port.postMessage(['note_on', 60, 0.8]);
+    // Wait for the worklet to acknowledge message delivery before rendering,
+    // otherwise the offline render can finish before note_on arrives.
+    await new Promise((resolve) => {
+      node.port.onmessage = (e) => { if (e.data === '__pong') resolve(); };
+      node.port.postMessage(['__ping']);
+    });
+    const rendered = await ctx.startRendering();
+    const l = rendered.getChannelData(0);
+    let peak = 0;
+    for (const v of l) peak = Math.max(peak, Math.abs(v));
+    el.textContent = (peak > 0.001 ? 'OK peak=' + peak.toFixed(4) : 'SILENT peak=' + peak) + procError;
+  } catch (err) {
+    el.textContent = 'ERROR: ' + err;
+  }
+})();
+</script>

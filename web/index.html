@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>ss synth</title>
+<style>
+  .key { display: inline-block; border: 1px solid #000; text-align: center; vertical-align: top; cursor: pointer; }
+  .key.white { width: 30px; height: 90px; }
+  .key.black { width: 18px; height: 55px; margin: 0 -10px; background: #888; position: relative; z-index: 1; }
+  .key.active { background: #ccc; }
+  #keyboard { user-select: none; touch-action: none; display: none; }
+</style>
+</head>
+<body>
+  <button id="play-seq">play sequence</button>
+  <button id="stop-seq" disabled>stop</button>
+  <br><br>
+
+  <b>master</b><br>
+  gain <input type="range" id="gain" min="-30" max="0" step="0.01" value="-10"> <output id="gain-value"></output><br>
+  <button id="panic">panic</button>
+  <br><br>
+
+  <b>osc 1</b><br>
+  waveform
+  <select id="osc0-wave">
+    <option value="0">sine</option>
+    <option value="1" selected>square</option>
+    <option value="2">saw</option>
+    <option value="3">triangle</option>
+  </select><br>
+  gain <input type="range" id="osc0-gain" min="0" max="1" step="0.01" value="1"> <output id="osc0-gain-value"></output><br>
+  detune <input type="range" id="osc0-detune" min="-100" max="100" step="0.1" value="0"> <output id="osc0-detune-value"></output><br>
+  <br>
+
+  <b>osc 2</b><br>
+  waveform
+  <select id="osc1-wave">
+    <option value="0">sine</option>
+    <option value="1" selected>square</option>
+    <option value="2">saw</option>
+    <option value="3">triangle</option>
+  </select><br>
+  gain <input type="range" id="osc1-gain" min="0" max="1" step="0.01" value="1"> <output id="osc1-gain-value"></output><br>
+  detune <input type="range" id="osc1-detune" min="-100" max="100" step="0.1" value="0"> <output id="osc1-detune-value"></output><br>
+  <br>
+
+  <b>osc 3</b><br>
+  waveform
+  <select id="osc2-wave">
+    <option value="0">sine</option>
+    <option value="1">square</option>
+    <option value="2" selected>saw</option>
+    <option value="3">triangle</option>
+  </select><br>
+  gain <input type="range" id="osc2-gain" min="0" max="1" step="0.01" value="1"> <output id="osc2-gain-value"></output><br>
+  detune <input type="range" id="osc2-detune" min="-100" max="100" step="0.1" value="0"> <output id="osc2-detune-value"></output><br>
+  <br>
+
+  <b>filter</b><br>
+  cutoff <input type="range" id="cutoff" min="0" max="1" step="0.001" value="1"> <output id="cutoff-value"></output><br>
+  resonance <input type="range" id="resonance" min="0" max="0.99" step="0.01" value="0.7"> <output id="resonance-value"></output><br>
+  <br>
+
+  <b>envelope</b><br>
+  attack <input type="range" id="attack" min="0" max="1" step="0.001" value="0.189"> <output id="attack-value"></output><br>
+  decay <input type="range" id="decay" min="0" max="1" step="0.001" value="0.541"> <output id="decay-value"></output><br>
+  sustain <input type="range" id="sustain" min="0" max="1" step="0.01" value="0.8"> <output id="sustain-value"></output><br>
+  release <input type="range" id="release" min="0" max="1" step="0.001" value="0.622"> <output id="release-value"></output><br>
+  <br>
+
+  <div id="keyboard"></div>
+
+  <script src="main.js"></script>
+</body>
+</html>
